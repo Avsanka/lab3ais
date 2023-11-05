@@ -1,0 +1,11 @@
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\NLog.config
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\lab2server.exe.config
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\lab2server.exe
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\lab2server.pdb
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\NLog.dll
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\bin\Debug\NLog.xml
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\obj\Debug\lab2server.csproj.AssemblyReference.cache
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\obj\Debug\lab2server.csproj.CoreCompileInputs.cache
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\obj\Debug\lab2server.csproj.CopyComplete
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\obj\Debug\lab2server.exe
+C:\Users\Пользователь\Desktop\files\labs files\labs ais\lab22\lab2\lab2server\obj\Debug\lab2server.pdb
