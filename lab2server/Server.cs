@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using classPerson;
+using lab2server;
 using NLog;
 
 
 class AsyncUdpServer
 {
     private const int port = 8001;
-    private const string path = "C:\\Users\\Пользователь\\Desktop\\files\\labs files\\labs ais\\lab22\\lab2\\lab2server\\data.csv";
+    private const string path = "C:\\Users\\Пользователь\\Desktop\\files\\labs files\\labs ais\\lab3\\lab2server\\data.csv";
     private static Logger logger = LogManager.GetCurrentClassLogger();
 
 
@@ -43,18 +44,11 @@ class AsyncUdpServer
 
             }
 
-            else if (request == "cl")                        //clear file
-            {
-                response = "file was cleared";
-                clearFile();
-                logger.Info("All records were successfully deleted");
-            }
-
 
 
             else if (request.StartsWith("chnum"))                            // choose by number
             {
-                if (int.TryParse(request.Substring(5), out int num) && num > 0 && num < CountFileString())
+                if (int.TryParse(request.Substring(5), out int num) && num > 0)
                 {
                     response = chooseByNum(num);
                     logger.Info("Record number " + num.ToString() + " was successfully shown");
@@ -86,7 +80,7 @@ class AsyncUdpServer
 
             else if (request.StartsWith("dnum"))            //удаление записи по номеру
             {
-                if (int.TryParse(request.Substring(4), out int num) && num > 0 && num < CountFileString() && deleteByNum(num))
+                if (int.TryParse(request.Substring(4), out int num) && num > 0 && deleteByNum(num))
                 {
                     response = "record was deleted successful";
                     logger.Info("1 record was deleted successful");
@@ -123,31 +117,50 @@ class AsyncUdpServer
 
     private static string getAllData()                   //вывести все
     {
-        string[] lines = File.ReadAllLines(path);
+        List<string> lines = new List<string>();
+        using (PersonContext db = new PersonContext())
+        {
+            var people = db.People;
+            foreach (Person u in people)
+            {
+                lines.Add(u.Id + " " + u.Name + " " + u.Surname + " " + u.Sex + " " + u.Age);
+                Console.WriteLine("{0} {1} {2} - {3} - {4}", u.Id, u.Name, u.Surname, u.Sex, u.Age);
+            }
+        }
         return string.Join(Environment.NewLine, lines);
-    }
-
-    private static void clearFile()                         // отчистка файла
-    {
-        File.WriteAllText(path, "");
     }
 
     private static string chooseByNum(int num)                // вывод по номеру
     {
-        string result = null;
-
-        using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+        using (PersonContext db = new PersonContext())
         {
-            for (int i = 0; i < num; i++)
+            var person = db.People.Find(num);
+            if (person != null)
             {
-                result = sr.ReadLine();
+                return person.Id + " " + person.Name + " " + person.Surname + " " + person.Sex + " " + person.Age.ToString();
+            }
+            else
+            {
+                return "There is no person with this number";
             }
         }
+    }
 
-        if (result == null)
-            return "There is no string with this number";
-        else
-            return result;
+
+    private static bool deleteByNum(int num)
+    {
+
+        using (PersonContext db = new PersonContext())
+        {
+            var person = db.People.Find(num);
+            if (person != null)
+            {
+                db.People.Remove(person);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
 
     }
 
@@ -158,8 +171,14 @@ class AsyncUdpServer
 
         if (info.Length == 4 && bool.TryParse(info[2], out _) && int.TryParse(info[3], out _))        //проверяем что пользователь ввел 4 значения и все значения в нужных типах данных
         {
-            Person person = new Person(info[0], info[1], bool.Parse(info[2]), int.Parse(info[3]));    //создаем персону
-            writePersonToFile(person);                                                                //пихаем персону в файл
+            Person person = new Person();
+            person.Name = info[0];
+            person.Surname = info[1];
+            person.Sex = bool.Parse(info[2]);
+            person.Age = int.Parse(info[3]);
+
+
+            writePersonToDb(person);                                                                //пихаем персону в базу
             return true;
         }
 
@@ -171,62 +190,15 @@ class AsyncUdpServer
     }
 
 
-    private static void writePersonToFile(Person person)                                         //для запихивания персоны в файл
+    private static void writePersonToDb(Person person)                                         //для запихивания персоны в базу
     {
-        using (StreamWriter sw = new StreamWriter(path, true, System.Text.Encoding.Default))
+        using (PersonContext db = new PersonContext())
         {
-            sw.WriteLine(person.Name + ", " + person.Surname + ", " + person.Sex + ", " + person.Age);
+            db.People.Add(person);
+            db.SaveChanges();
         }
 
     }
 
-    private static bool deleteByNum(int num)
-    {
-
-        List<string> records = new List<string>();
-        string line = "";
-
-        using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
-        {
-            while ((line = sr.ReadLine()) != null)
-            {
-                records.Add(line);
-            }
-        }
-
-        if (num > 0 && num <= records.Count)
-        {
-            records.RemoveAt(num - 1);
-
-            using (StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default))
-            {
-                foreach (string str in records)
-                {
-                    sw.WriteLine(str);
-                }
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    private static int CountFileString()
-    {
-        int stringsNum = 0;
-
-        using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
-        {
-            while (sr.ReadLine() != null)
-            {
-                stringsNum++;
-            }
-        }
-
-        return stringsNum;
-    }
 }
 

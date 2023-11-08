@@ -6,6 +6,10 @@ namespace classPerson
 {
     class Person
     {
+        private int id;
+        
+        public int Id { get { return id; } set { id = value; } }
+
         private string name;
 
         public string Name { get { return name; } set { name = value; } }
@@ -31,15 +35,6 @@ namespace classPerson
                     age = value;
             }
         }
-
-        public Person(string name, string surname, bool sex, int age)
-        {
-            this.name = name;
-            this.surname = surname;
-            this.sex = sex;
-            this.age = age;
-        }
-
 
     }
 }

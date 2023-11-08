@@ -15,9 +15,8 @@ class AsyncUpdClient
         Console.WriteLine("\n Choose an action");
         Console.WriteLine("1)add person to file - addp + data");
         Console.WriteLine("2)show persons - showps");
-        Console.WriteLine("3)clear file - cl");
-        Console.WriteLine("4)choose person by number - chnum + number");
-        Console.WriteLine("5)delete person by number - dnum + number");
+        Console.WriteLine("3)choose person by number - chnum + number");
+        Console.WriteLine("4)delete person by number - dnum + number");
         Console.WriteLine("exit - esc");
         Console.WriteLine();
     }
